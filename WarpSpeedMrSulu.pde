@@ -1,5 +1,5 @@
 class WarpSpeedMrSulu extends Routine {
-  int NUM_STARS = 70;
+  int NUM_STARS = 50;
   WarpStar[] warpstars;
 
   void setup(PApplet parent) {
@@ -44,16 +44,19 @@ class WarpStar {
 
   public void reset() {
 
-    //RGB 252/23/218
+    // RGB 252/23/218
     //r = 252;
     //g = 23;
     //b = 218;
     //r = int(map(y, 0, displayHeight, 0, 255));
     //g = 0;
     //b = 0;
-    r = random(varMin[0], varMax[0]);
-    g = random(varMin[1], varMax[1]);
-    b = random(varMin[2], varMax[2]);
+    //r = random(varMin[0], varMax[0]);
+    //g = random(varMin[1], varMax[1]);
+    //b = random(varMin[2], varMax[2]);
+    r = random(varMax[0]);
+    g = random(varMax[1]);
+    b = random(varMax[2]);
 
     // select color from hsv color space
     //float tm = random(map(varMin[0],0,255,0,TWO_PI),map(varMax[0],0,255,0,TWO_PI));
@@ -69,19 +72,16 @@ class WarpStar {
 
     y = int(random(0, displayHeight));
 
-    //float typeThresh = map((varMin[1]+varMax[1])/2.0, 0, 255, 0, 1);
-    //float vdir = map ((varMin[2]+varMax[2])/2.0, 0, 255, -2, 2);
-
-    if (random(0, 1) > 0.5/*typeThresh*/) {
+    if (random(0, 1) > 0.5) {
       x = int(random(0, displayWidth));
-      vx = (random(0, 1)-0.55)*(1.7*0.01*(displayWidth-x));
+      vx = (random(0, 1)-0.55)*(1.5*(0.01*(displayWidth-x)));
       vy = 0;
-      len = int((abs(vx)+1) * 10);
+      len = int((abs(vx)+2) * 10);
     }
     else {
       x = int(random(0, displayWidth));
       vx = 0;
-      vy = (random(0, 1)-0.5/*vdir*/)*1.7;
+      vy = (random(0, 1)-0.5)*1.5;
       len = int((abs(vy)+1) * 10);
     }
     
@@ -129,7 +129,7 @@ class WarpStar {
       _x = int(x);
       _y = int(y);
       for (int i=1; i<len; i++) {
-        float scaler = pow(0.90, i);
+        float scaler = pow(0.93, i);
 
         _r = int(scaler*r);
         _g = int(scaler*g);

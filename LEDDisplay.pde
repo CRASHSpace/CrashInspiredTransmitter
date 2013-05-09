@@ -206,16 +206,15 @@ public class LEDDisplay {
           g = int(green(image.pixels[y*w+x]));
           b = int(blue(image.pixels[y*w+x]));
 
-          if (enableCIECorrection) {
-            r = (int)(CIE8bit[r]);
-            g = (int)(CIE8bit[g]);
-            b = (int)(CIE8bit[b]);
-          }
-
           if (enableGammaCorrection) {
             r = (int)(Math.pow(r/256.0, this.gammaValue)*256*bright);
             g = (int)(Math.pow(g/256.0, this.gammaValue)*256*bright);
             b = (int)(Math.pow(b/256.0, this.gammaValue)*256*bright);
+          }
+          else if (enableCIECorrection) {
+            r = (int)(CIE8bit[int(r*bright)]);
+            g = (int)(CIE8bit[int(g*bright)]);
+            b = (int)(CIE8bit[int(b*bright)]);
           }
 
 
