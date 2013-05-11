@@ -19,7 +19,7 @@ boolean VERTICAL = false;
 int FRAMERATE = 15;
 int TYPICAL_MODE_TIME = 6000;
 
-float bright = 0.15;  // Global brightness modifier
+float bright = 0.25;  // Global brightness modifier
 
 Routine drop = new Seizure();
 Routine backupRoutine = null;
@@ -59,11 +59,11 @@ Routine[] enabledRoutines = new Routine[] {
   //new RGBRoutine(), 
   new Warp(new RGBRoutine(), true, true, 0.5, 0.5), 
   //new RainbowColors(), 
-  new Warp(new RainbowColors(), true, true, 0.5, 0.5), 
+  //new Warp(new RainbowColors(), true, true, 0.5, 0.5), 
   new Warp(null, true, false, 0.5, 0.5), 
   new Waves(), 
   //new ColorDrop(), 
-  new Warp(new ColorDrop(), true, true, 0.5, 0.5), 
+  //new Warp(new ColorDrop(), true, true, 0.5, 0.5), 
   //new Bursts(),
   new Warp(new Bursts(), true, true, 0.5, 0.5), 
   //new Chase(), 
@@ -73,6 +73,7 @@ Routine[] enabledRoutines = new Routine[] {
   //new DropTheBomb(), 
   //new Fire(), 
   //new FFTDemo(),
+  new ColorTest(), 
 };
 
 
@@ -83,8 +84,8 @@ void setup() {
 
   sign = new LEDDisplay(this, displayHeight, displayWidth, true, transmit_address, transmit_port);
   sign.setAddressingMode(LEDDisplay.ADDRESSING_HORIZONTAL_NORMAL);
-  //sign.setEnableGammaCorrection(true);
-  sign.setEnableCIECorrection(true);
+  sign.setEnableGammaCorrection(true);
+  //sign.setEnableCIECorrection(true);
 
   setMode(0);
 
