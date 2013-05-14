@@ -6,8 +6,8 @@ import java.io.*;
 
 // This should be 127.0.0.1, 58802
 //String transmit_address = "127.0.0.1";
-String transmit_address = "172.16.16.52";
-//String transmit_address = "192.168.111.23";
+//String transmit_address = "172.16.16.52";
+String transmit_address = "192.168.111.21";
 int transmit_port       = 58082;
 
 
@@ -16,10 +16,10 @@ int displayWidth = 60;
 int displayHeight = 32;
 
 boolean VERTICAL = false;
-int FRAMERATE = 15;
+int FRAMERATE = 12;
 int TYPICAL_MODE_TIME = 6000;
 
-float bright = 0.25;  // Global brightness modifier
+float bright = 0.15;  // Global brightness modifier
 
 Routine drop = new Seizure();
 Routine backupRoutine = null;
@@ -84,8 +84,8 @@ void setup() {
 
   sign = new LEDDisplay(this, displayHeight, displayWidth, true, transmit_address, transmit_port);
   sign.setAddressingMode(LEDDisplay.ADDRESSING_HORIZONTAL_NORMAL);
-  sign.setEnableGammaCorrection(true);
-  //sign.setEnableCIECorrection(true);
+  //sign.setEnableGammaCorrection(true);
+  sign.setEnableCIECorrection(true);
 
   setMode(0);
 
@@ -99,8 +99,8 @@ void setup() {
   // Consult the output of println(Serial.list()); to figure out which you
   // should be using.
   if (Serial.list().length > 0) {
-    ctrlPort = new Serial(this, Serial.list()[0], 38400);
-    //ctrlPort = new Serial(this, "COM51", 38400);
+    //ctrlPort = new Serial(this, Serial.list()[0], 38400);
+    ctrlPort = new Serial(this, "COM51", 38400);
 
     // Fire a serialEvent() when when a linefeed comes in to the serial port.
     ctrlPort.bufferUntil('\n');
