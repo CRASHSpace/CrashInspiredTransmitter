@@ -6,9 +6,9 @@ class Chase extends Routine {
   void draw() {
     background(0);
     // select from full range to introduce more variance
-    r = constrain(0.95*r+0.05*random(varMax[0]),0,255);
-    g = constrain(0.95*g+0.05*random(varMax[1]),0,255);
-    b = constrain(0.95*b+0.05*random(varMax[2]),0,255);
+    r = constrain(0.95*r+0.05*random(varMax[0]/3),0,255);
+    g = constrain(0.95*g+0.05*random(varMax[1]/3),0,255);
+    b = constrain(0.95*b+0.05*random(varMax[2]/3),0,255);
     //println("color:"+int(r)+","+int(g)+","+int(b));
     stroke(color(r, g, b));
 

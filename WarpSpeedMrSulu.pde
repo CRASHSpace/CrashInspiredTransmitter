@@ -51,12 +51,12 @@ class WarpStar {
     //r = int(map(y, 0, displayHeight, 0, 255));
     //g = 0;
     //b = 0;
-    r = random(varMin[0], varMax[0]);
-    g = random(varMin[1], varMax[1]);
-    b = random(varMin[2], varMax[2]);
-    //r = random(varMax[0]);
-    //g = random(varMax[1]);
-    //b = random(varMax[2]);
+    //r = random(varMin[0], varMax[0]);
+    //g = random(varMin[1], varMax[1]);
+    //b = random(varMin[2], varMax[2]);
+    r = random(varMax[0]);
+    g = random(varMax[1]);
+    b = random(varMax[2]);
 
     // select color from hsv color space
     //float tm = random(map(varMin[0],0,255,0,TWO_PI),map(varMax[0],0,255,0,TWO_PI));

@@ -24,7 +24,7 @@ class ColorTest extends Routine {
     frameCnt++;
 
     animationStep = (animationStep + 1)%lineSpacing;
-    if (0 == frameCnt%128) {
+    if (0 == frameCnt%64) {
       if (r>0) {
         r = 0;
         g = 255;

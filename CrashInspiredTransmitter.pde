@@ -7,7 +7,7 @@ import java.io.*;
 // This should be 127.0.0.1, 58802
 //String transmit_address = "127.0.0.1";
 //String transmit_address = "172.16.16.52";
-String transmit_address = "192.168.111.21";
+String transmit_address = "192.168.111.22";
 int transmit_port       = 58082;
 
 
@@ -16,10 +16,10 @@ int displayWidth = 60;
 int displayHeight = 32;
 
 boolean VERTICAL = false;
-int FRAMERATE = 12;
-int TYPICAL_MODE_TIME = 6000;
+int FRAMERATE = 15;
+int TYPICAL_MODE_TIME = 360;
 
-float bright = 0.15;  // Global brightness modifier
+float bright = 0.5;  // Global brightness modifier
 
 Routine drop = new Seizure();
 Routine backupRoutine = null;
@@ -73,7 +73,7 @@ Routine[] enabledRoutines = new Routine[] {
   //new DropTheBomb(), 
   //new Fire(), 
   //new FFTDemo(),
-  new ColorTest(), 
+  //new ColorTest(), 
 };
 
 
@@ -302,7 +302,7 @@ void draw() {
 
   if (currentRoutine.isDone) {
     currentRoutine.isDone = false;
-    //newMode();
+    newMode();
   }
 
   sign.sendData();
