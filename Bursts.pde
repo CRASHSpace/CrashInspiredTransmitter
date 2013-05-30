@@ -1,5 +1,5 @@
 class Bursts extends Routine {
-  int NUMBER_OF_BURSTS = 8;
+  int NUMBER_OF_BURSTS = 6;
   Burst[] bursts;
 
   void setup(PApplet parent) {
@@ -49,9 +49,9 @@ class Burst {
 
   public void reset()
   {
-    r = random(255-32)+32;
-    g = random(255-32)+32;
-    b = random(255-32)+32;
+    //r = random(255-32)+32;
+    //g = random(255-32)+32;
+    //b = random(255-32)+32;
     r = random(varMin[0], varMax[0]);
     g = random(varMin[1], varMax[1]);
     b = random(varMin[2], varMax[2]);
@@ -66,7 +66,7 @@ class Burst {
     maxd = random(20);
     speed = random(5)/10 + 0.1;
     d = 0;
-    intensity = int(random(255));
+    intensity = int(random(max(max(varMax[0],varMax[1]),varMax[2])));
   }
 
   public void init()
