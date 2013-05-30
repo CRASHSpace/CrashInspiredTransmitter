@@ -6,17 +6,19 @@ class DropTheBomb extends Routine {
   float flashBrightness;
   float blastRadius;
   float blastSpeed;
+  int bombLength;
 
   void setup(PApplet parent) {
     super.setup(parent);
-    bombSpeed = displayHeight / (frameRate*3);
-    flashSpeed = 255 / (frameRate*1);
-    blastSpeed = max(displayWidth, displayHeight) / (frameRate*5);
+    bombSpeed = displayHeight / (frameRate*2.5);
+    flashSpeed = 255 / (frameRate*4);
+    blastSpeed = max(displayWidth, displayHeight) / (frameRate*3);
+    bombLength = 7;
   }
 
   void reset() {
-    bombX = random(displayWidth);
-    bombY = 0;
+    bombX = displayWidth-bombLength;;
+    bombY = random(displayHeight);
     flashBrightness = 255;
     blastRadius = 0;
   }
@@ -35,7 +37,8 @@ class DropTheBomb extends Routine {
       blastRadius += blastSpeed;
     }
     else {
-      newMode();
+      //newMode();
+      newMode(0);
     }
   }
 
@@ -43,10 +46,10 @@ class DropTheBomb extends Routine {
     int c = 255;
     background(0);
 
-    for (int i=0; i<5; i++) {
+    for (int i=0; i<bombLength; i++) {
       stroke(c);
-      point(bombX-i, bombY);
-      c = c - 32;
+      point(bombX+i, bombY);
+      c = int(0.75*c);
     }
   }
 
