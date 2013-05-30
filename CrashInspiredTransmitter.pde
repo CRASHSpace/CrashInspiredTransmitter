@@ -7,7 +7,8 @@ import java.io.*;
 // This should be 127.0.0.1, 58802
 //String transmit_address = "127.0.0.1";
 //String transmit_address = "172.16.16.52";
-String transmit_address = "192.168.111.22";
+//String transmit_address = "192.168.111.20";
+String transmit_address = "192.168.42.2";
 int transmit_port       = 58082;
 
 
@@ -19,7 +20,7 @@ boolean VERTICAL = false;
 int FRAMERATE = 15;
 int TYPICAL_MODE_TIME = 360;
 
-float bright = 0.5;  // Global brightness modifier
+float bright = 0.15;  // Global brightness modifier
 
 Routine drop = new Seizure();
 Routine backupRoutine = null;
@@ -55,25 +56,25 @@ int[] varMax = {
 };
 
 Routine[] enabledRoutines = new Routine[] {
+  //new ColorTest(),
   new WarpSpeedMrSulu(), 
-  //new RGBRoutine(), 
+  new RGBRoutine(), 
   new Warp(new RGBRoutine(), true, true, 0.5, 0.5), 
   //new RainbowColors(), 
   //new Warp(new RainbowColors(), true, true, 0.5, 0.5), 
   new Warp(null, true, false, 0.5, 0.5), 
-  new Waves(), 
+  //new Waves(), 
   //new ColorDrop(), 
   //new Warp(new ColorDrop(), true, true, 0.5, 0.5), 
-  //new Bursts(),
+  new Bursts(), 
   new Warp(new Bursts(), true, true, 0.5, 0.5), 
   //new Chase(), 
   new Warp(new Chase(), true, true, 0.5, 0.5), 
   //new Animator("anim-nyancat", 1, .5, 0, 0, 0), 
   //new Greetz(), 
-  //new DropTheBomb(), 
-  //new Fire(), 
   //new FFTDemo(),
-  //new ColorTest(), 
+  new DropTheBomb(), 
+  //new Fire(), 
 };
 
 
@@ -140,7 +141,7 @@ void newMode() {
   setFadeLayer(240);
   if (enabledRoutines.length > 1) {
     while (newMode == mode) {
-      newMode = int((mode+1)%enabledRoutines.length);
+      newMode = int((mode+1)%(enabledRoutines.length-1));
     }
   }
 
@@ -160,7 +161,7 @@ void newMode(int mode) {
   else {
     if (enabledRoutines.length > 1) {
       while (newMode == mode) {
-        newMode = int((mode+1)%enabledRoutines.length);
+        newMode = int((mode+1)%(enabledRoutines.length-1));
       }
     }
   }
@@ -202,16 +203,24 @@ void handleInput(String s) {
         switch (buttonID) {
         case '0':
           // do something
-          break;
-        case '1':
-          // do something
           if (!switching_mode) {
             newMode();
             switching_mode = true;
           }
           break;
+        case '1':
+          // drop the bomb
+          if (!switching_mode) {
+            newMode(enabledRoutines.length-1);
+            switching_mode = true;
+          }
+          break;
         case '2':
-          // do something
+          // reset to mode 0
+          if (!switching_mode) {
+            newMode(0);
+            switching_mode = true;
+          }
           break;
         default:
           // complain
@@ -302,7 +311,7 @@ void draw() {
 
   if (currentRoutine.isDone) {
     currentRoutine.isDone = false;
-    newMode();
+    //newMode();
   }
 
   sign.sendData();
