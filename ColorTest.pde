@@ -2,6 +2,7 @@ class ColorTest extends Routine {
   int animationStep = 0;
   int frameCnt = 0;
   int lineSpacing = 8;
+  int lineSlope = 8;
   float r = 255;
   float g = 0;
   float b = 0;
@@ -10,11 +11,11 @@ class ColorTest extends Routine {
     background(0);
 
     long frame = frameCount - modeFrameStart;
-    for (int i=0; i<displayHeight; i++) {
+    for (int i=0; i<(displayHeight+lineSlope); i++) {
       if (animationStep == i%lineSpacing) {
         //println("color:"+int(r)+","+int(g)+","+int(b));
         stroke(color(r, g, b));
-        line(0, i, displayWidth, i);
+          line(0, i, displayWidth, i-lineSlope);
       }
     }
     if (frame > FRAMERATE*TYPICAL_MODE_TIME) {
@@ -23,8 +24,10 @@ class ColorTest extends Routine {
 
     frameCnt++;
 
-    animationStep = (animationStep + 1)%lineSpacing;
-    if (0 == frameCnt%64) {
+    if (0 == frameCnt%4) {
+      animationStep = (animationStep + 1)%lineSpacing;
+    }
+    if (0 == frameCnt%(64*4)) {
       if (r>0) {
         r = 0;
         g = 255;
