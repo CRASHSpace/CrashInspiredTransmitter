@@ -1,5 +1,5 @@
 class WarpSpeedMrSulu extends Routine {
-  int NUM_STARS = 70;
+  int NUM_STARS = 50;
   WarpStar[] warpstars;
 
   void setup(PApplet parent) {
@@ -54,9 +54,12 @@ class WarpStar {
     //r = random(varMin[0], varMax[0]);
     //g = random(varMin[1], varMax[1]);
     //b = random(varMin[2], varMax[2]);
-    r = random(varMax[0]);
-    g = random(varMax[1]);
-    b = random(varMax[2]);
+    //r = random(varMax[0]);
+    //g = random(varMax[1]);
+    //b = random(varMax[2]);
+    r = random(varMax[0]>>2, varMax[0]);
+    g = random(varMax[1]>>2, varMax[1]);
+    b = random(varMax[2]>>2, varMax[2]);
 
     // select color from hsv color space
     //float tm = random(map(varMin[0],0,255,0,TWO_PI),map(varMax[0],0,255,0,TWO_PI));
@@ -76,7 +79,7 @@ class WarpStar {
       x = int(random(0, displayWidth));
       vx = (random(0, 1)-0.55)*(1.0*(0.01*(displayWidth-x)));
       vy = 0;
-      len = int((abs(vx)+2) * 10);
+      len = int((abs(vx)+2) * 15);
     }
     else {
       x = int(random(0, displayWidth));
@@ -84,7 +87,7 @@ class WarpStar {
       vy = (random(0, 1)-0.5)*1.0;
       len = int((abs(vy)+1) * 10);
     }
-    
+
 
     // override values for testing
     if (false) {
