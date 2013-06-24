@@ -7,9 +7,11 @@ import java.io.*;
 // This should be 127.0.0.1, 58802
 //String transmit_address = "127.0.0.1";
 //String transmit_address = "172.16.16.52";
-//String transmit_address = "192.168.111.20";
-String transmit_address = "192.168.42.2";
+String transmit_address = "192.168.111.20";
+//String transmit_address = "192.168.42.2";
 int transmit_port       = 58082;
+
+float bright = 0.17;  // Global brightness modifier
 
 
 // Display configuration
@@ -18,9 +20,7 @@ int displayHeight = 32;
 
 boolean VERTICAL = false;
 int FRAMERATE = 15;
-int TYPICAL_MODE_TIME = 360;
-
-float bright = 0.15;  // Global brightness modifier
+int TYPICAL_MODE_TIME = 2048;
 
 Routine drop = new Seizure();
 Routine backupRoutine = null;
@@ -48,17 +48,43 @@ Serial ctrlPort;
 String kbdInput = "";
 int lf = int('\n'); // ASCII linefeed
 
+// defining limits for use input
+final int PWM_MIN_VAL = 0;
+final int PWM_MAX_VAL = 0xff;
+final int PWM_DEF_VAL = int(((PWM_MAX_VAL+PWM_MIN_VAL)/2.0));
+
+final float rOffset = PWM_DEF_VAL/float(PWM_MAX_VAL);
+final float gOffset = PWM_DEF_VAL/float(PWM_MAX_VAL);
+final float bOffset = PWM_DEF_VAL/float(PWM_MAX_VAL);
+
+// modulating background color
+//float oSpeed = .000075;
+float oSpeed = 0.0001;
+
+// values set by user imput
+int[] setVarMin = {
+  64, 64, 64
+};
+int[] setVarMax = {
+  128, 128, 128
+};
+
+// values used by program
 int[] varMin = {
   64, 64, 64
 };
 int[] varMax = {
-  192, 192, 192
+  128, 128, 128
+};
+int[] varRange = {
+  32, 32, 32
 };
 
 Routine[] enabledRoutines = new Routine[] {
   //new ColorTest(),
+  //new Warp(new WarpSpeedMrSulu(), true, true, 0.5, 0.5),
   new WarpSpeedMrSulu(), 
-  new RGBRoutine(), 
+  //new RGBRoutine(), 
   new Warp(new RGBRoutine(), true, true, 0.5, 0.5), 
   //new RainbowColors(), 
   //new Warp(new RainbowColors(), true, true, 0.5, 0.5), 
@@ -66,15 +92,15 @@ Routine[] enabledRoutines = new Routine[] {
   //new Waves(), 
   //new ColorDrop(), 
   //new Warp(new ColorDrop(), true, true, 0.5, 0.5), 
-  new Bursts(), 
+  //new Bursts(), 
   new Warp(new Bursts(), true, true, 0.5, 0.5), 
-  //new Chase(), 
+  //  new Chase(), 
   new Warp(new Chase(), true, true, 0.5, 0.5), 
   //new Animator("anim-nyancat", 1, .5, 0, 0, 0), 
   //new Greetz(), 
   //new FFTDemo(),
   new DropTheBomb(), 
-  //new Fire(), 
+  //new Fire(),
 };
 
 
@@ -102,6 +128,7 @@ void setup() {
   if (Serial.list().length > 0) {
     //ctrlPort = new Serial(this, Serial.list()[0], 38400);
     ctrlPort = new Serial(this, "COM51", 38400);
+    //ctrlPort = new Serial(this, "/dev/ttyUSB0", 38400);
 
     // Fire a serialEvent() when when a linefeed comes in to the serial port.
     ctrlPort.bufferUntil('\n');
@@ -236,12 +263,13 @@ void handleInput(String s) {
 
           if (s.substring(4, 7).equals("max")) {
             //println("var"+varID+" max: "+s.substring(7, 10));
-            varMax[varID] = int(s.substring(7, 10));
+            varMax[varID] = setVarMax[varID] = int(s.substring(7, 10));
           }
           else if (s.substring(4, 7).equals("min")) {
             //println("var"+varID+" min: "+s.substring(7, 10));
-            varMin[varID] = int(s.substring(7, 10));
+            varMin[varID] = setVarMin[varID] = int(s.substring(7, 10));
           }
+          varRange[varID] = (int)((setVarMax[varID] - setVarMin[varID])/2);
         }
       }
       break;
@@ -280,17 +308,30 @@ void serialEvent(Serial ctrlPort) {
   }
 }
 
+void updateColor() {
+  float tm = oSpeed * millis();
+
+  varMin[0] = (int)constrain(setVarMin[0]+(varRange[0]*(sin(tm)/2+rOffset)), PWM_MIN_VAL, PWM_MAX_VAL);
+  varMin[1] = (int)constrain(setVarMin[1]+(varRange[1]*(sin(tm+TWO_PI/3)/2+gOffset)), PWM_MIN_VAL, PWM_MAX_VAL);
+  varMin[2] = (int)constrain(setVarMin[2]+(varRange[2]*(sin(tm+2*TWO_PI/3)/2+bOffset)), PWM_MIN_VAL, PWM_MAX_VAL);
+  varMax[0] = (int)constrain(setVarMax[0]+(varRange[0]*(sin(tm)/2+rOffset)), PWM_MIN_VAL, PWM_MAX_VAL);
+  varMax[1] = (int)constrain(setVarMax[1]+(varRange[1]*(sin(tm+TWO_PI/3)/2+gOffset)), PWM_MIN_VAL, PWM_MAX_VAL);
+  varMax[2] = (int)constrain(setVarMax[2]+(varRange[2]*(sin(tm+2*TWO_PI/3)/2+bOffset)), PWM_MIN_VAL, PWM_MAX_VAL);
+}
 
 boolean switching_mode = false; // if true, we already switched modes, so don't do it again this frame (don't freeze the display if someone holds the b button)
 int seizure_count = 10;  // Only let seizure mode work for a short time.
 
 void draw() {
+  // update color offsets
+  updateColor();
+
   // should test if mode switch is actually done?
   switching_mode = false;
 
   if (fadeOutFrames > 0) {
     fadeOutFrames--;
-    blend(fadeLayer, 0, 0, displayWidth, displayHeight, 0, 0, displayWidth, displayHeight, MULTIPLY);
+
 
     if (fadeOutFrames == 0) {
       fadeInFrames = FRAMERATE;

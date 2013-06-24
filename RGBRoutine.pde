@@ -4,6 +4,7 @@ class RGBRoutine extends Routine {
   void draw() {
     background(0);
     noSmooth();
+    float scaling = 1.0;
 
     for (int row = 0; row < displayHeight; row++) {
       for (int col = 0; col < displayWidth; col++) {
@@ -11,7 +12,7 @@ class RGBRoutine extends Routine {
         float g = (((row)*2 + 100.0*col/displayWidth + color_angle + 33)%100)*(varMax[1]/100.0);
         float b = (((row)*2 + 100.0*col/displayWidth + color_angle + 66)%100)*(varMax[2]/100.0);
 
-        stroke(int(r), int(g), int(b));
+        stroke(int(scaling*r), int(scaling*g), int(scaling*b));
         //print("("+col+","+row+"):"+int(r)+","+int(g)+","+int(b)+" ");
         point(col, row);
       }
