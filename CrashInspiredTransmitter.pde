@@ -6,12 +6,10 @@ import java.io.*;
 
 // This should be 127.0.0.1, 58802
 //String transmit_address = "127.0.0.1";
-//String transmit_address = "172.16.16.52";
 String transmit_address = "192.168.111.20";
-//String transmit_address = "192.168.42.2";
 int transmit_port       = 58082;
 
-float bright = 0.17;  // Global brightness modifier
+float bright = 0.10;  // Global brightness modifier
 
 
 // Display configuration
@@ -59,7 +57,7 @@ final float bOffset = PWM_DEF_VAL/float(PWM_MAX_VAL);
 
 // modulating background color
 //float oSpeed = .000075;
-float oSpeed = 0.0001;
+float oSpeed = 0.0005;
 
 // values set by user imput
 int[] setVarMin = {
@@ -311,12 +309,21 @@ void serialEvent(Serial ctrlPort) {
 void updateColor() {
   float tm = oSpeed * millis();
 
+  // modulate between bounds
   varMin[0] = (int)constrain(setVarMin[0]+(varRange[0]*(sin(tm)/2+rOffset)), PWM_MIN_VAL, PWM_MAX_VAL);
-  varMin[1] = (int)constrain(setVarMin[1]+(varRange[1]*(sin(tm+TWO_PI/3)/2+gOffset)), PWM_MIN_VAL, PWM_MAX_VAL);
-  varMin[2] = (int)constrain(setVarMin[2]+(varRange[2]*(sin(tm+2*TWO_PI/3)/2+bOffset)), PWM_MIN_VAL, PWM_MAX_VAL);
   varMax[0] = (int)constrain(setVarMax[0]+(varRange[0]*(sin(tm)/2+rOffset)), PWM_MIN_VAL, PWM_MAX_VAL);
+  varMin[1] = (int)constrain(setVarMin[1]+(varRange[1]*(sin(tm+TWO_PI/3)/2+gOffset)), PWM_MIN_VAL, PWM_MAX_VAL);
   varMax[1] = (int)constrain(setVarMax[1]+(varRange[1]*(sin(tm+TWO_PI/3)/2+gOffset)), PWM_MIN_VAL, PWM_MAX_VAL);
+  varMin[2] = (int)constrain(setVarMin[2]+(varRange[2]*(sin(tm+2*TWO_PI/3)/2+bOffset)), PWM_MIN_VAL, PWM_MAX_VAL);
   varMax[2] = (int)constrain(setVarMax[2]+(varRange[2]*(sin(tm+2*TWO_PI/3)/2+bOffset)), PWM_MIN_VAL, PWM_MAX_VAL);
+
+//  // modulate across full range
+//  varMin[0] = (int)constrain(setVarMin[0]+(PWM_DEF_VAL*(sin(tm)/2+rOffset)), PWM_MIN_VAL, PWM_MAX_VAL);
+//  varMax[0] = (int)constrain(setVarMax[0]+(PWM_DEF_VAL*(sin(tm)/2+rOffset)), PWM_MIN_VAL, PWM_MAX_VAL);
+//  varMin[1] = (int)constrain(setVarMin[1]+(PWM_DEF_VAL*(sin(tm+TWO_PI/3)/2+gOffset)), PWM_MIN_VAL, PWM_MAX_VAL);
+//  varMax[1] = (int)constrain(setVarMax[1]+(PWM_DEF_VAL*(sin(tm+TWO_PI/3)/2+gOffset)), PWM_MIN_VAL, PWM_MAX_VAL);
+//  varMin[2] = (int)constrain(setVarMin[2]+(PWM_DEF_VAL*(sin(tm+2*TWO_PI/3)/2+bOffset)), PWM_MIN_VAL, PWM_MAX_VAL);
+//  varMax[2] = (int)constrain(setVarMax[2]+(PWM_DEF_VAL*(sin(tm+2*TWO_PI/3)/2+bOffset)), PWM_MIN_VAL, PWM_MAX_VAL);
 }
 
 boolean switching_mode = false; // if true, we already switched modes, so don't do it again this frame (don't freeze the display if someone holds the b button)
