@@ -1,5 +1,5 @@
 class Bursts extends Routine {
-  int NUMBER_OF_BURSTS = 6;
+  int NUMBER_OF_BURSTS = 8;
   Burst[] bursts;
 
   void setup(PApplet parent) {
@@ -15,7 +15,7 @@ class Bursts extends Routine {
 
   void draw()
   {
-    background(0, 0, 20);
+    background(0);
 
     for (int i=0; i<NUMBER_OF_BURSTS; i++) {
       bursts[i].draw();
@@ -59,14 +59,14 @@ class Burst {
     x = random(displayWidth);
     y = random(displayHeight);
 
-    float max_speed = .25;
+    float max_speed = .15;
     xv = random(max_speed) - max_speed/2.0;
     yv = (32/60.0)*(random(max_speed) - max_speed/2.0);
 
     maxd = random(20);
-    speed = random(5)/10 + 0.1;
+    speed = random(1)/10 + 0.1;
     d = 0;
-    intensity = int(random(max(max(varMax[0],varMax[1]),varMax[2])));
+    intensity = int(random(max(max(varMin[0],varMin[1]),varMin[2])));
   }
 
   public void init()
@@ -76,7 +76,7 @@ class Burst {
 
   public void draw_ellipse(float x, float y, float widt, float heigh, color c) {
     while (widt > 1 && heigh > 1) {
-      float target_brightness = random(.95, 1.05);
+      float target_brightness = random(.97, 1.03);
       c = color(red(c)*target_brightness, green(c)*target_brightness, blue(c)*target_brightness);
       fill(c);
       stroke(c);
@@ -89,9 +89,9 @@ class Burst {
   public void draw()
   {
     // Draw multiple elipses, to handle wrapping in the y direction.
-    draw_ellipse(x, y, d*(.5-.3*y/displayHeight), d*3, color(r, g, b));
-    draw_ellipse(x-displayWidth, y, d*(.5-.3*y/displayHeight), d*3, color(r, g, b));
-    draw_ellipse(x+displayWidth, y, d*(.5-.3*y/displayHeight), d*3, color(r, g, b));
+    draw_ellipse(x, y, d*(.5-.3*y/displayHeight), d*2, color(r, g, b));
+    draw_ellipse(x-displayWidth, y, d*(.5-.3*y/displayHeight), d*0.75, color(r, g, b));
+    draw_ellipse(x+displayWidth, y, d*(.5-.3*y/displayHeight), d*0.75, color(r, g, b));
 
     d+= speed;
 

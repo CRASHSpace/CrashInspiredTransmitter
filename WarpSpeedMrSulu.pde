@@ -77,9 +77,9 @@ class WarpStar {
 
     if (random(0, 1) > 0.5) {
       x = int(random(0, displayWidth));
-      vx = (random(0, 1)-0.55)*(1.0*(0.01*(displayWidth-x)));
+      vx = (random(0, 1)-0.55)*(2.0*(0.01*(displayWidth-x)));
       vy = 0;
-      len = int((abs(vx)+2) * 15);
+      len = int((abs(vx)+2) * 20);
     }
     else {
       x = int(random(0, displayWidth));

@@ -12,7 +12,7 @@ class DropTheBomb extends Routine {
     super.setup(parent);
     bombSpeed = displayHeight / (frameRate*2.5);
     flashSpeed = 255 / (frameRate*4);
-    blastSpeed = max(displayWidth, displayHeight) / (frameRate*3);
+    blastSpeed = max(displayWidth, displayHeight) / (frameRate*2);
     bombLength = 7;
   }
 
