@@ -32,13 +32,13 @@ class DropTheBomb extends Routine {
       drawFlash();
       flashBrightness -= flashSpeed;
     }
-    else if (blastRadius/2 < displayWidth || blastRadius/2 < displayHeight) {
-      drawBlast();
-      blastRadius += blastSpeed;
-    }
+//    else if (blastRadius/2 < displayWidth || blastRadius/2 < displayHeight) {
+//      drawBlast();
+//      blastRadius += blastSpeed;
+//    }
     else {
       //newMode();
-      newMode(0);
+      newMode(6);
     }
   }
 

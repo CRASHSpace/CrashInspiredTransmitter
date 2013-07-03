@@ -5,11 +5,11 @@ import hypermedia.net.*;
 import java.io.*;
 
 // This should be 127.0.0.1, 58802
-//String transmit_address = "127.0.0.1";
-String transmit_address = "192.168.111.20";
+String transmit_address = "127.0.0.1";
+//String transmit_address = "192.168.111.20";
 int transmit_port       = 58082;
 
-float bright = 0.10;  // Global brightness modifier
+float bright = 1.0;  //0.10;  // Global brightness modifier
 
 
 // Display configuration
@@ -98,7 +98,7 @@ Routine[] enabledRoutines = new Routine[] {
   //new Greetz(), 
   //new FFTDemo(),
   new DropTheBomb(), 
-  //new Fire(),
+  new Fire(),
 };
 
 
@@ -166,7 +166,7 @@ void newMode() {
   setFadeLayer(240);
   if (enabledRoutines.length > 1) {
     while (newMode == mode) {
-      newMode = int((mode+1)%(enabledRoutines.length-1));
+      newMode = int((mode+1)%(enabledRoutines.length-2));
     }
   }
 
