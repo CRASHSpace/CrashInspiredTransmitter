@@ -29,10 +29,10 @@ class FFTDemo extends Routine {
       //    stroke(0,0,255);
       //    line(i, displayHeight, i, displayHeight - fft.getBand(i)*4);
       //    //line(i, displayHeight, i, displayHeight - fft.getBand(i));
-      float barHeight = fft.getBand(i)*4;
+      float barHeight = fft.getBand(i)*6;
       for (float c = 0; c < barHeight; c++) {
         stroke(c/barHeight*255, 0, 255);
-        point(i, displayHeight - c);
+        point(c, i);
       }
     }
 

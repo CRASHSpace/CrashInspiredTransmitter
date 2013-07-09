@@ -96,7 +96,7 @@ Routine[] enabledRoutines = new Routine[] {
   new Warp(new Chase(), true, true, 0.5, 0.5), 
   //new Animator("anim-nyancat", 1, .5, 0, 0, 0), 
   //new Greetz(), 
-  //new FFTDemo(),
+  new FFTDemo(),
   new DropTheBomb(), 
   new Fire(),
 };
