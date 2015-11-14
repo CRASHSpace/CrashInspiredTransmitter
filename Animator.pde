@@ -81,7 +81,7 @@ class Animation {
 
   void load(String name) {
     int filesCounter=0;
-    File dataFolder = new File(sketchPath, "data/"+name);
+    File dataFolder = new File(sketchPath(), "data/"+name);
     String[] allFiles = dataFolder.list();
     try {
       for (int j=0;j<allFiles.length;j++) {

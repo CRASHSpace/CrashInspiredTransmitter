@@ -52,7 +52,7 @@ import hypermedia.net.*;
 //};
 
 static final short CIE8bit[] =
-{
+  {
   0, 2, 5, 7, 10, 12, 15, 17, 20, 22, 25, 27, 29, 32, 34, 37, 39, 41, 43, 46, 48, 50, 52, 55, 57, 59, 61, 63, 66, 68, 70, 72, 
   74, 76, 78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 99, 101, 103, 105, 107, 109, 110, 112, 114, 116, 117, 119, 121, 
   122, 124, 126, 127, 129, 131, 132, 134, 135, 137, 139, 140, 142, 143, 145, 146, 148, 149, 150, 152, 153, 155, 156, 
@@ -81,7 +81,7 @@ public class LEDDisplay {
   int w;
   int h;
   int addressingMode;
-  byte buffer[];
+  byte frame[][];
   int pixelsPerChannel;
   float gammaValue = 2.5;
   boolean enableGammaCorrection = false;
@@ -96,14 +96,17 @@ public class LEDDisplay {
     this.w = w;
     this.h = h;
     this.isRGB = isRGB;
-    int bufferSize = (isRGB ? 3 : 1)*(w*h)+1;
-    buffer = new byte[bufferSize];
+    int frameSize = (isRGB ? 3 : 1)*(w*h)/2+1;
+    frame = new byte[2][frameSize];
     this.addressingMode = ADDRESSING_HORIZONTAL_NORMAL;
     // TODO Detect this based on VERTICAL (h/2) vs. HORIZONTAL (w/2)
     this.pixelsPerChannel = 8;
 
-    for (int i=0; i<bufferSize; i++) {
-      buffer[i] = 0;
+    frame[0][0] = 0;
+    frame[1][0] = 1;
+    for (int i=1; i<frameSize; i++) {
+      frame[0][i] = 0;
+      frame[1][i] = 0;
     }
   }
 
@@ -138,33 +141,26 @@ public class LEDDisplay {
   private int getAddress(int x, int y) {
     if (addressingMode == ADDRESSING_VERTICAL_NORMAL) {
       return (x * h + y);
-    }
-    else if (addressingMode == ADDRESSING_VERTICAL_HALF) {
+    } else if (addressingMode == ADDRESSING_VERTICAL_HALF) {
       return ((y % pixelsPerChannel) + floor(y / pixelsPerChannel)*pixelsPerChannel*w + x*pixelsPerChannel);
-    }
-    else if (addressingMode == ADDRESSING_VERTICAL_FLIPFLOP) {
+    } else if (addressingMode == ADDRESSING_VERTICAL_FLIPFLOP) {
       if (y>=pixelsPerChannel) {
         int endAddress = (x+1) * h - 1;
         int address = endAddress - (y % pixelsPerChannel);
         return address;
-      }
-      else {
+      } else {
         return (x * h + y);
       }
-    }
-    else if (addressingMode == ADDRESSING_HORIZONTAL_NORMAL) {
+    } else if (addressingMode == ADDRESSING_HORIZONTAL_NORMAL) {
       return (y * w + x);
-    }
-    else if (addressingMode == ADDRESSING_HORIZONTAL_HALF) {
+    } else if (addressingMode == ADDRESSING_HORIZONTAL_HALF) {
       return ((x % pixelsPerChannel) + floor(x / pixelsPerChannel)*pixelsPerChannel*h + y*pixelsPerChannel);
-    }
-    else if (addressingMode == ADDRESSING_HORIZONTAL_FLIPFLOP) {
+    } else if (addressingMode == ADDRESSING_HORIZONTAL_FLIPFLOP) {
       if (x>=pixelsPerChannel) {
         int endAddress = (y+1) * w - 1;
         int address = endAddress - (x % pixelsPerChannel);
         return address;
-      }
-      else {
+      } else {
         return (y * h + x);
       }
     }
@@ -196,46 +192,51 @@ public class LEDDisplay {
     int r;
     int g;
     int b;
-    buffer[0] = 1;
-    for (int y=0; y<h; y++) {
-      for (int x=0; x<w; x++) {
-        int loc = getAddress(x, y);
-
-        if (isRGB) {
-          r = int(red(image.pixels[y*w+x]));
-          g = int(green(image.pixels[y*w+x]));
-          b = int(blue(image.pixels[y*w+x]));
-
-          if (enableGammaCorrection) {
-            r = (int)(Math.pow(r/256.0, this.gammaValue)*256*bright);
-            g = (int)(Math.pow(g/256.0, this.gammaValue)*256*bright);
-            b = (int)(Math.pow(b/256.0, this.gammaValue)*256*bright);
-          }
-          else if (enableCIECorrection) {
-            r = (int)(CIE8bit[int(r*bright)]);
-            g = (int)(CIE8bit[int(g*bright)]);
-            b = (int)(CIE8bit[int(b*bright)]);
+    for (int f=0; f<2; f++) {
+      frame[f][0] = (byte)f;
+      for (int y=(f*(h/2)); y<((1+f)*(h/2)); y++) {
+        for (int x=0; x<w; x++) {
+          int loc = getAddress(x, y);
+          if (1 == f) {
+            loc -= h/2*w;
           }
 
+          if (isRGB) {
+            r = int(red(image.pixels[y*w+x]));
+            g = int(green(image.pixels[y*w+x]));
+            b = int(blue(image.pixels[y*w+x]));
 
-          buffer[(loc*3)+1] = byte(r);
-          buffer[(loc*3)+2] = byte(g);
-          buffer[(loc*3)+3] = byte(b);
-        }
-        else {
-          r = int(brightness(image.pixels[y*w+x]));
+            if (enableGammaCorrection) {
+              r = (int)(Math.pow(r/256.0, this.gammaValue)*256*bright);
+              g = (int)(Math.pow(g/256.0, this.gammaValue)*256*bright);
+              b = (int)(Math.pow(b/256.0, this.gammaValue)*256*bright);
+            } else if (enableCIECorrection) {
+              r = (int)(CIE8bit[int(r*bright)]);
+              g = (int)(CIE8bit[int(g*bright)]);
+              b = (int)(CIE8bit[int(b*bright)]);
+            }
 
-          if (enableGammaCorrection) {
-            r = (int)(Math.pow(r/256.0, this.gammaValue)*256);
+            frame[f][(loc*3)+1] = byte(r);
+            frame[f][(loc*3)+2] = byte(g);
+            frame[f][(loc*3)+3] = byte(b);
+          } else {
+            r = int(brightness(image.pixels[y*w+x]));
+
+            if (enableGammaCorrection) {
+              r = (int)(Math.pow(r/256.0, this.gammaValue)*256);
+            }
+
+            frame[f][(getAddress(x, y)+1)] = byte(r);
           }
-
-          buffer[(getAddress(x, y)+1)] = byte(r);
         }
       }
     }
     updatePixels();
-
-    udp.send(buffer, address, port);
+    
+    //frame[0][0] = 1;
+    udp.send(frame[0], address, port);
+    frame[0][0] = 1;
+    udp.send(frame[0], address, port);
+    //udp.send(frame[1], address, port);
   }
 }
-

@@ -10,12 +10,10 @@ class RainbowColors extends Routine {
     for (int x = 0; x < displayWidth; x++) {
       for (int y = 0; y < displayHeight; y++) {
         if (x < displayWidth/2) {
-          stroke((pow(x, 0.3)*pow(y, .8)+frame)%100, 90*random(.7, 1.3), 90*random(.8, 1.2));
+          set((int)((x+frame)%displayWidth), y, color((pow(x, 0.3)*pow(y, .8)+frame)%100, 90*random(.7, 1.3), 90*random(.8, 1.2)));
+        } else {
+          set((int)((x+frame)%displayWidth), y, color((pow(displayWidth-x, 0.3)*pow(y, .8)+frame)%100, 90*random(.7, 1.3), 90*random(.8, 1.2)));
         }
-        else {
-          stroke((pow(displayWidth-x, 0.3)*pow(y, .8)+frame)%100, 90*random(.7, 1.3), 90*random(.8, 1.2));
-        }
-        point((x+frame)%displayWidth, y);
       }
     }
 
@@ -26,4 +24,3 @@ class RainbowColors extends Routine {
     }
   }
 }
-

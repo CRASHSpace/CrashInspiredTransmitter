@@ -1,20 +1,21 @@
 import processing.serial.*;
 import processing.opengl.*;
 import java.lang.reflect.Method;
-import hypermedia.net.*;
 import java.io.*;
 
 // This should be 127.0.0.1, 58802
-String transmit_address = "127.0.0.1";
+//String transmit_address = "127.0.0.1";
+//int transmit_port       = 58082;
 //String transmit_address = "192.168.111.20";
-int transmit_port       = 58082;
+String transmit_address = "10.42.69.145";
+//int transmit_port       = 7890;  // OPC
+int transmit_port       = 9999;  // UDP/TCP
 
-float bright = 1.0;  //0.10;  // Global brightness modifier
-
+float bright = 0.05;  //0.10;  // Global brightness modifier
 
 // Display configuration
 int displayWidth = 60;
-int displayHeight = 32;
+int displayHeight = 16;
 
 boolean VERTICAL = false;
 int FRAMERATE = 15;
@@ -80,30 +81,30 @@ int[] varRange = {
 
 Routine[] enabledRoutines = new Routine[] {
   //new ColorTest(),
-  //new Warp(new WarpSpeedMrSulu(), true, true, 0.5, 0.5),
   new WarpSpeedMrSulu(), 
-  //new RGBRoutine(), 
-  new Warp(new RGBRoutine(), true, true, 0.5, 0.5), 
-  //new RainbowColors(), 
-  //new Warp(new RainbowColors(), true, true, 0.5, 0.5), 
-  new Warp(null, true, false, 0.5, 0.5), 
-  //new Waves(), 
-  //new ColorDrop(), 
-  //new Warp(new ColorDrop(), true, true, 0.5, 0.5), 
-  //new Bursts(), 
-  new Warp(new Bursts(), true, true, 0.5, 0.5), 
-  //  new Chase(), 
-  new Warp(new Chase(), true, true, 0.5, 0.5), 
+  new Warp(new WarpSpeedMrSulu(), true, true, 0.25, 0.25),
+  new RGBRoutine(), 
+  new Warp(new RGBRoutine(), true, true, 0.25, 0.25), 
+  new RainbowColors(), 
+  new Warp(new RainbowColors(), true, true, 0.25, 0.25), 
+  new Warp(null, true, false, 0.25, 0.25), 
+  new Waves(), 
+  new ColorDrop(), 
+  new Warp(new ColorDrop(), true, true, 0.25, 0.25), 
+  new Bursts(), 
+  new Warp(new Bursts(), true, true, 0.25, 0.25), 
+  new Chase(), 
+  new Warp(new Chase(), true, true, 0.25, 0.25), 
   //new Animator("anim-nyancat", 1, .5, 0, 0, 0), 
   //new Greetz(), 
-  new FFTDemo(),
-  new DropTheBomb(), 
-  new Fire(),
+  //new FFTDemo(),
+  //new DropTheBomb(), 
+  //new Fire(),
 };
 
 
 void setup() {
-  size(displayWidth, displayHeight);
+  size(displayWidth, displayHeight, P3D);
 
   frameRate(FRAMERATE);
 
@@ -123,15 +124,14 @@ void setup() {
   // The first serial port on my mac is the Arduino so I just open that.
   // Consult the output of println(Serial.list()); to figure out which you
   // should be using.
-  if (Serial.list().length > 0) {
-    //ctrlPort = new Serial(this, Serial.list()[0], 38400);
-    ctrlPort = new Serial(this, "COM51", 38400);
-    //ctrlPort = new Serial(this, "/dev/ttyUSB0", 38400);
+  //if (Serial.list().length > 0) {
+  //  //ctrlPort = new Serial(this, Serial.list()[0], 38400);
+  //  ctrlPort = new Serial(this, "COM51", 38400);
 
-    // Fire a serialEvent() when when a linefeed comes in to the serial port.
-    ctrlPort.bufferUntil('\n');
-    ctrlPort.write(lf);
-  }
+  //  // Fire a serialEvent() when when a linefeed comes in to the serial port.
+  //  ctrlPort.bufferUntil('\n');
+  //  ctrlPort.write(lf);
+  //}
   for (Routine r : enabledRoutines) {
     r.setup(this);
   }
@@ -364,4 +364,3 @@ void draw() {
 
   sign.sendData();
 }
-

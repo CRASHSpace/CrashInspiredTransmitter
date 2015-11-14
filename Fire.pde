@@ -13,7 +13,7 @@ class Fire extends Routine {
     super.setup(parent);
 
     // Create buffered image for flame effect
-    pg = createGraphics(displayWidth, displayHeight, P2D);
+    pg = createGraphics(displayWidth, displayHeight, P3D);
 
     calc1 = new int[displayHeight];
     calc3 = new int[displayHeight];
@@ -87,4 +87,3 @@ class Fire extends Routine {
     updatePixels();
   }
 }
-

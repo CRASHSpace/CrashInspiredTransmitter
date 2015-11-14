@@ -31,8 +31,7 @@ class FFTDemo extends Routine {
       //    //line(i, displayHeight, i, displayHeight - fft.getBand(i));
       float barHeight = fft.getBand(i)*6;
       for (float c = 0; c < barHeight; c++) {
-        stroke(c/barHeight*255, 0, 255);
-        point(c, i);
+        set((int)c, i, color(c/barHeight*255, 0, 255));
       }
     }
 
@@ -41,4 +40,3 @@ class FFTDemo extends Routine {
     }
   }
 }
-

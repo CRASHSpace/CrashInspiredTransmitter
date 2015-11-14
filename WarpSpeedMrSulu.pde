@@ -4,6 +4,7 @@ class WarpSpeedMrSulu extends Routine {
 
   void setup(PApplet parent) {
     super.setup(parent);
+    //noSmooth();
     warpstars = new WarpStar[NUM_STARS];
     for (int i = 0; i<NUM_STARS; i++) {
       warpstars[i] = new WarpStar();
@@ -68,36 +69,36 @@ class WarpStar {
     //b = 128*(sin(tm+2*TWO_PI/3)/2+1);
 
     // scale brightness.
-    float bright = random(.5, 2);
+    float bright = random(1.0, 2);
     r = constrain(bright*((long)r), 0, 255);
     g = constrain(bright*((long)g), 0, 255);
     b = constrain(bright*((long)b), 0, 255);
 
     y = int(random(0, displayHeight));
 
-    if (random(0, 1) > 0.5) {
+    if (random(0, 1) > 0.7) {
       x = int(random(0, displayWidth));
       vx = (random(0, 1)-0.55)*(2.0*(0.01*(displayWidth-x)));
       vy = 0;
       len = int((abs(vx)+2) * 20);
-    }
-    else {
+    } else {
       x = int(random(0, displayWidth));
       vx = 0;
       vy = (random(0, 1)-0.5)*1.0;
-      len = int((abs(vy)+1) * 10);
+      len = int((abs(vy)+1) * 7);
     }
 
 
     // override values for testing
+    /*
     if (false) {
-      x = int(random(0, displayWidth));
-      vx = (random(0, 1)-0.5)*1.5;
-      vy = (random(0, 1)-0.45)*1.5;
-      //vx = 0;
-      //vy = 0;
-      len = int((abs(vx)+1) * 10);
-    }
+     x = int(random(0, displayWidth));
+     vx = (random(0, 1)-0.5)*1.5;
+     vy = (random(0, 1)-0.45)*1.5;
+     //vx = 0;
+     //vy = 0;
+     len = int((abs(vx)+1) * 10);
+     }*/
 
     dx = int(random(0*displayWidth, 4*displayWidth));
     dy = int(random(0*displayHeight, 2*displayHeight));
@@ -109,7 +110,7 @@ class WarpStar {
 
   public void draw() {
     float _r, _g, _b;
-    float _x, _y;
+    int _x, _y;
 
     dx--;
     dy--;
@@ -124,34 +125,30 @@ class WarpStar {
       if (y < 0) y += displayHeight;
       if (y > displayWidth) y -= displayHeight;
 
-      stroke(r, g, b);
+      _x = round(x);
+      _y = round(y);
 
-      noSmooth();
-      point(x, y);
+      set(_x, _y, color(r, g, b));
 
-      _x = int(x);
-      _y = int(y);
       for (int i=1; i<len; i++) {
         float scaler = pow(0.93, i);
 
-        _r = int(scaler*r);
-        _g = int(scaler*g);
-        _b = int(scaler*b);
+        _r = round(scaler*r);
+        _g = round(scaler*g);
+        _b = round(scaler*b);
         stroke(color(_r, _g, _b));
 
-        _x = int(x-(i*vx));
-        _y = int(y-(i*vy));
+        _x = round(x-(i*vx));
+        _y = round(y-(i*vy));
 
         if (_x < 0) _x += displayWidth;
         if (_x > displayWidth) _x -= displayWidth;
         if (_y < 0) _y += displayHeight;
         if (_y > displayHeight) _y -= displayHeight;
-        point(_x, _y);
+        set(_x, _y, color(_r, _g, _b));
       }
-    }
-    else {
+    } else {
       this.reset();
     }
   }
 }
-

@@ -58,7 +58,7 @@ class Warp extends Routine {
       }
     }
     else {
-      background(0);
+      //background(0);
       noFill();
       ellipseMode(RADIUS);
       for (int i=0; i<10; i++) {
@@ -90,4 +90,3 @@ class Warp extends Routine {
     }
   }
 }
-
